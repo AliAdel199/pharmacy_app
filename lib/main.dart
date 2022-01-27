@@ -1,6 +1,7 @@
 
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../db/invoice.dart';
 import '../db/item_for_sell.dart';
@@ -15,6 +16,22 @@ const email = 'you@server.com';
 const password = '123123';
 
 
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.squareCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false
+  ..customAnimation=CustomAnimation();
+}
 void main() async{
   // await DesktopWindow.setMinWindowSize(Size(500,500));
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +73,26 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+
+class CustomAnimation extends EasyLoadingAnimation {
+  CustomAnimation();
+
+  @override
+  Widget buildWidget(
+      Widget child,
+      AnimationController controller,
+      AlignmentGeometry alignment,
+      ) {
+    return Opacity(
+      opacity: controller.value,
+      child: RotationTransition(
+        turns: controller,
+        child: child,
+      ),
     );
   }
 }

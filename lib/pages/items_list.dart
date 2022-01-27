@@ -1,5 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pharmacy_app/db/medicine.dart';
 import '../boxes.dart';
 import '../constant.dart';
 import '../pages/ItemInfo.dart';
@@ -18,14 +22,73 @@ class _ItemsListState extends State<ItemsList> {
   FocusNode textEditingFocusNode = FocusNode();
 
   var data = Boxes.getMedicine();
+  var fireData =  Firestore.instance.collection("Medicine");
 
+  void getDataFromFireStore()async{
+
+   var connectivityResult = await (Connectivity().checkConnectivity());
+   print(connectivityResult);
+
+if (connectivityResult != ConnectivityResult.none) {
+                       setState(() {
+    EasyLoading.show(status: 'Get Data...',maskType: EasyLoadingMaskType.clear,);
+  });
+ var dataStore =await fireData.get();
+dataStore.forEach((element) {
+  print(element);
+
+// final newMedicine = Medicine()
+//       ..medName = element["medName"]
+//       ..docNote = element["docNote"]
+//       ..sicNote = element["sicNote"]
+//       ..boxPrice = element["boxPrice"]
+//       ..selPrice = element["sellPrice"];
+//     data.put(element.id, newMedicine);
+
+});
+      setState(() {
+    EasyLoading.showSuccess('Great Success!');
+  });  
+
+      // I am connected to a mobile network.
+    } else {
+      // I am connected to a wifi network.
+      AlertDialog(
+        title: Text(
+          "تنبيه",
+          style: TextStyle(
+            fontFamily: 'Tajawal',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: fontColor,
+          ),
+        ),
+        content: Text(
+          "تم حفظ البيانات بدون الرفع الى الانترنت لعدم وجود الاتصال !!!",
+          style: TextStyle(
+            fontFamily: 'Tajawal',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: fontColor,
+          ),
+        ),
+      );
+    }
+}
+
+@override
+  void initState() {
+    // TODO: implement initState
+    getDataFromFireStore();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     DesktopWindow.setMinWindowSize(Size(1050, 800));
     final orientation = MediaQuery.of(context).orientation;
-    data.values.forEach((element) {
-      print("hhhh ${element.key}");
-    });
+ 
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;

@@ -59,7 +59,6 @@ class _AddNewItemState extends State<AddNewItem> {
     // mybox.keys;
   }
 
-
   void clearFields() {
     _barcode.clear();
     _sicNote.clear();
@@ -267,7 +266,7 @@ class _AddNewItemState extends State<AddNewItem> {
                   posTop: height * 0.63,
                   title: "اضافة",
                   callbackAction: () => addItem(
-                         barcode: _barcode.text,
+                      barcode: _barcode.text,
                       name: _itemName.text,
                       boxPrice: int.parse(_boxPrice.text),
                       selPrice: int.parse(_itemPrice.text),
@@ -280,11 +279,17 @@ class _AddNewItemState extends State<AddNewItem> {
                   posTop: height * 0.63,
                   title: "تعديل",
                   callbackAction: () async {
-                    clearFields();
+                    addItem(
+                        barcode: _barcode.text,
+                        name: _itemName.text,
+                        docNote: _docNote.text,
+                        sicNote: _sicNote.text,
+                        boxPrice: int.parse(_boxPrice.text),
+                        selPrice: int.parse(_itemPrice.text));
+                    // clearFields();
                     _barcodemyFocusNode.requestFocus();
                     // itemForSell.clear();
                   }),
-                  
             ],
           ),
         ));
