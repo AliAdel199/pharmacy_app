@@ -51,7 +51,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                     icon: Icon(
                       Icons.exit_to_app_rounded,
                       size: width * 0.024,
-                      color: Color(0xff79C9BC),
+                      color: const Color(0xff79C9BC),
                     )),
               ),
               MyTextField(
@@ -149,7 +149,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                                     ],
                                   ),
                                 ),
-                                Divider(thickness: 3,endIndent: 20,indent: 20,),                                Padding(
+                                const Divider(thickness: 3,endIndent: 20,indent: 20,),                                Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
