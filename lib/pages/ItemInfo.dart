@@ -1,11 +1,8 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
-import 'package:pharmacy_app/db/item_for_sell.dart';
-import 'package:pharmacy_app/db/medicine.dart';
-import 'package:pharmacy_app/widget/button_widget.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
+import '../db/medicine.dart';
+import '../widget/button_widget.dart';
+import '../widget/text_field_widget.dart';
 
 import '../boxes.dart';
 import '../constant.dart';
@@ -26,8 +23,13 @@ class _ItemInfoState extends State<ItemInfo> {
   final TextEditingController _boxPrice = TextEditingController();
   final TextEditingController _docNote = TextEditingController();
   final TextEditingController _sicNote = TextEditingController();
-
-  late List aa;
+  final  FocusNode _barcodemyFocusNode=FocusNode();
+  final  FocusNode _itemNameFocusNode=FocusNode();
+  final  FocusNode _itemPriceFocusNode=FocusNode();
+  final  FocusNode _boxPriceFocusNode=FocusNode();
+   final FocusNode _docNoteFocusNode=FocusNode();
+   final FocusNode _sicNoteFocusNode=FocusNode();
+   late List aa;
 
   final box = Boxes.getMedicine();
 
@@ -126,7 +128,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.1,
                 posTop: height * 0.1,
                 title: "الباركود",
-                textEditingController: _barcode,
+                textEditingController: _barcode,myFocusNode: _barcodemyFocusNode,
               ),
               Positioned(
                 top: height * 0.06,
@@ -149,7 +151,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.63,
                 posTop: height * 0.1,
                 title: "ملاحظات شخصية",
-                textEditingController: _docNote,
+                textEditingController: _docNote,myFocusNode: _docNoteFocusNode,
               ),
               Positioned(
                 top: height * 0.21,
@@ -172,7 +174,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.1,
                 posTop: height * 0.25,
                 title: "اسم المنتج",
-                textEditingController: _itemName,
+                textEditingController: _itemName,myFocusNode: _itemNameFocusNode,
               ),
               Positioned(
                 top: height * 0.35,
@@ -195,7 +197,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.1,
                 posTop: height * 0.4,
                 title: "سعر المفرد",
-                textEditingController: _itemPrice,
+                textEditingController: _itemPrice,myFocusNode: _itemPriceFocusNode,
               ),
               Positioned(
                 top: height * 0.35,
@@ -218,7 +220,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.35,
                 posTop: height * 0.4,
                 title: "سعر الصندوق",
-                textEditingController: _boxPrice,
+                textEditingController: _boxPrice,myFocusNode: _boxPriceFocusNode,
               ),
               Positioned(
                 top: height * 0.51,
@@ -241,7 +243,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 posRight: height * 0.1,
                 posTop: height * 0.55,
                 title: "ملاحظات للمريض",
-                textEditingController: _sicNote,
+                textEditingController: _sicNote,myFocusNode: _sicNoteFocusNode,
               ),
               MyButton(
                   width: height * 0.2,

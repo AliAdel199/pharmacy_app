@@ -9,8 +9,8 @@ class Boxes {
 
   static Box<Invoice> getInvoice() => Hive.box<Invoice>('invoice');
 
-  static Box<ItemForSell> getItemForSell() =>
-      Hive.box<ItemForSell>('itemForSell');
+  static Box<ItemForSell> getItemForSell(String boxName) =>
+      Hive.box<ItemForSell>(boxName);
 
   static Box test() => Hive.box('test');
 }

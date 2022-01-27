@@ -1,6 +1,6 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmacy_app/constant.dart';
+import '../constant.dart';
 import '../pages/add_item_page.dart';
 import '../pages/new_invoice.dart';
 import '../widget/button_widget.dart';
@@ -19,7 +19,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    DesktopWindow.setMinWindowSize(Size(1050, 800));
+    DesktopWindow.setMinWindowSize(Size(1200, 800));
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -68,14 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   callbackAction: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => ItemsList()))),
               MyButton(
-                  width: width * 0.17,
-                  height: width * 0.17,
-                  posRight: width * 0.30,
-                  posTop: width * 0.35,
-                  title: "سجل\n الفواتير",
-                  callbackAction: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => InvoicesHistory()))),
+                width: width * 0.17,
+                height: width * 0.17,
+                posRight: width * 0.30,
+                posTop: width * 0.35,
+                title: "سجل\n الفواتير",
+                callbackAction: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => InvoicesHistory())),
+              ),
             ],
           ),
         ));

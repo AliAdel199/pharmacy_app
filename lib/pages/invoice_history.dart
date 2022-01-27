@@ -1,9 +1,7 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:pharmacy_app/boxes.dart';
-import 'package:pharmacy_app/widget/button_widget.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
+import '../boxes.dart';
+import '../widget/text_field_widget.dart';
 
 import '../constant.dart';
 import 'invoiceHistory.dart';
@@ -18,15 +16,13 @@ class InvoicesHistory extends StatefulWidget {
 class _InvoicesHistoryState extends State<InvoicesHistory> {
   TextEditingController barcode = TextEditingController();
   TextEditingController? textEditingController = TextEditingController();
+   FocusNode myFocusNode=FocusNode();
 
   var data = Boxes.getInvoice();
 
   @override
   Widget build(BuildContext context) {
-
-    setState(() {
-
-    });
+    setState(() {});
     DesktopWindow.setMinWindowSize(Size(1050, 800));
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -64,6 +60,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                 width: width * 0.5,
                 height: height * 0.8,
                 textEditingController: textEditingController,
+                myFocusNode: myFocusNode,
                 callbackAction: () {},
                 maxline: 1,
                 posTop: height * 0.05,
@@ -124,6 +121,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                                     ],
                                   ),
                                 ),
+                                Divider(thickness: 3,endIndent: 20,indent: 20,),
                                 Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
@@ -151,14 +149,14 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                                     ],
                                   ),
                                 ),
-                                Padding(
+                                Divider(thickness: 3,endIndent: 20,indent: 20,),                                Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        "سعر الشراء : ",
+                                        "التأريخ : ",
                                         style: TextStyle(
                                           fontFamily: 'Tajawal',
                                           fontSize: width * 0.012,

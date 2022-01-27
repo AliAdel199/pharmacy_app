@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import '../constant.dart';
 
@@ -17,7 +17,8 @@ class MyTextField extends StatelessWidget {
       required this.fontSize,
       required this.maxline,
       required this.callbackAction,
-      required this.onChange})
+      required this.onChange,
+      required this.myFocusNode})
       : super(key: key);
   final double width;
   final double height;
@@ -28,6 +29,7 @@ class MyTextField extends StatelessWidget {
   final double fontSize;
   final double posRight;
   final String title;
+  final FocusNode myFocusNode;
 
   final VoidCallback callbackAction;
 
@@ -40,7 +42,7 @@ class MyTextField extends StatelessWidget {
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: TextField(
-            onSubmitted: onChange,
+            onSubmitted: onChange,focusNode: myFocusNode,
 
             // onChanged: onChange,
 

@@ -1,21 +1,23 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pharmacy_app/constant.dart';
-import 'package:pharmacy_app/db/invoice.dart';
-import 'package:pharmacy_app/db/item_for_sell.dart';
-import 'package:intl/intl.dart' as international;
-import 'package:pharmacy_app/db/printInvoice.dart';
-import 'package:pharmacy_app/widget/InvoiceTextField.dart';
-import 'package:pharmacy_app/widget/button_widget.dart';
-import 'package:pharmacy_app/widget/costomTextField.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
-import 'package:printing/printing.dart';
 import '../constant.dart';
+import '../db/invoice.dart';
+import '../db/item_for_sell.dart';
+import 'package:intl/intl.dart' as international;
+import '../db/printInvoice.dart';
+import '../widget/InvoiceTextField.dart';
+import '../widget/button_widget.dart';
+import '../widget/costomTextField.dart';
+import '../widget/text_field_widget.dart';
+import 'package:printing/printing.dart';
+
 import '../boxes.dart';
 import 'package:tabbed_view/tabbed_view.dart';
+
+import '../customTabView.dart';
 
 class NewInvoice extends StatefulWidget {
   const NewInvoice({Key? key}) : super(key: key);
@@ -32,33 +34,37 @@ class _NewInvoiceState extends State<NewInvoice> {
   final List<TextEditingController> _sellPriceControllers = [];
   final List<TextEditingController> _totalPriceControllers = [];
   final List<TextEditingController> _itemNameControllers = [];
-  late List<List<ItemForSell>> tabItemList;
+
+  final items = Boxes.getMedicine();
+
+  // late List<List<ItemForSell>> tabItemList;
 
   num invoiceTotal = 0;
   final TextEditingController searchControler = TextEditingController();
+  late FocusNode searchFocusNode;
 
   bool isRTL(String text) {
     return international.Bidi.detectRtlDirectionality(text);
   }
 
+  List<String> data = ['New Invoice'];
+  int initPosition = 0;
+
+  var box;
+
   @override
   void initState() {
     // TODO: implement initState
-
+    searchFocusNode = FocusNode();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final items = Boxes.getMedicine();
-    final itemSell = Boxes.getItemForSell();
+    searchFocusNode.requestFocus();
+    updateTotalInvoice(initPosition);
 
-    invoiceTotal = 0;
-    for (int i = 0; i < itemSell.length; i++) {
-      invoiceTotal = invoiceTotal + itemSell.getAt(i)!.itemTotal!;
-    }
-
-    DesktopWindow.setMinWindowSize(const Size(1050, 800));
+    DesktopWindow.setMinWindowSize(const Size(1150, 800));
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -67,7 +73,75 @@ class _NewInvoiceState extends State<NewInvoice> {
         backgroundColor: backgroundColor,
         body: Container(
             constraints: BoxConstraints.expand(),
-            child: Stack(
+            child: CustomTabView(
+              onPositionChange: (index) {
+                print('current position: $index');
+                setState(() {
+                  initPosition = index;
+                });
+              },
+              onScroll: (position) => print('$position'),
+              stub: Container(),
+              initPosition: initPosition,
+              itemCount: data.length,
+              tabBuilder: (context, index) => Container(
+                  width: 200,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(data[index]),
+                      Spacer(),
+                      IconButton(
+                          onPressed: () {
+                            clearInvoice(initPosition);
+
+                              if(index!=0){
+
+                                data.removeAt(index);
+                              }
+                              setState(() {
+                                invoiceTotal=0;
+                              });
+
+                          },
+                          icon: Icon(Icons.delete_forever_rounded),color: Colors.deepOrangeAccent,),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (data.length < 10) {
+                                data.add('New Invoice ');
+                              } else {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: const Text('تنبيه !!',
+                                        textDirection: TextDirection.rtl),
+                                    content: const Text(
+                                      'لقد وصلت الى اعلا قدر\n من النوافذ المفتوحة',
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                          icon: Icon(Icons.add))
+                    ],
+                  )),
+              pageBuilder: (context, tabIndex) => Stack(
                 alignment: Alignment.centerRight,
                 children: [
                   Positioned(
@@ -82,7 +156,19 @@ class _NewInvoiceState extends State<NewInvoice> {
                     top: 10,
                     left: 10,
                     child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Boxes.getItemForSell("inv1").clear();
+                          Boxes.getItemForSell("inv2").clear();
+                          Boxes.getItemForSell("inv3").clear();
+                          Boxes.getItemForSell("inv4").clear();
+                          Boxes.getItemForSell("inv5").clear();
+                          Boxes.getItemForSell("inv6").clear();
+                          Boxes.getItemForSell("inv7").clear();
+                          Boxes.getItemForSell("inv8").clear();
+                          Boxes.getItemForSell("inv9").clear();
+                          Boxes.getItemForSell("inv10").clear();
+                        },
                         icon: Icon(
                           Icons.exit_to_app_rounded,
                           size: width * 0.024,
@@ -168,27 +254,228 @@ class _NewInvoiceState extends State<NewInvoice> {
                           element.isAvailable == true);
                       print(printers);
 
-                      final box = Boxes.getItemForSell();
-                      final box2 = Boxes.getInvoice();
-                      Invoice x = Invoice()
-                        ..invID = box2.length + 1
-                        ..invDate = DateTime.now()
-                        ..invTime = DateTime.now()
-                        ..invItems = box.values.toList()
-                        ..invTotal = invoiceTotal as int?;
-                      box2.put(box2.length + 1, x);
+                      if (initPosition == 0) {
+                        box = Boxes.getItemForSell("inv1");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
 
-                      if (prenterIndex == -1) {
-                        await Printing.layoutPdf(
-                            onLayout: (format) => generateInvoice(format));
-                      } else {
-                        Printer printer = printers[prenterIndex];
-                        await Printing.directPrintPdf(
-                            printer: printer,
-                            onLayout: (format) => generateInvoice(format));
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 1) {
+                        box = Boxes.getItemForSell("inv2");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 2) {
+                        box = Boxes.getItemForSell("inv3");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 3) {
+                        box = Boxes.getItemForSell("inv4");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 4) {
+                        box = Boxes.getItemForSell("inv5");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 5) {
+                        box = Boxes.getItemForSell("inv6");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 6) {
+                        box = Boxes.getItemForSell("inv7");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 7) {
+                        box = Boxes.getItemForSell("inv8");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 8) {
+                        box = Boxes.getItemForSell("inv9");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
+                      } else if (initPosition == 9) {
+                        box = Boxes.getItemForSell("inv10");
+                        final box2 = Boxes.getInvoice();
+                        Invoice x = Invoice()
+                          ..invID = box2.length + 1
+                          ..invDate = DateTime.now()
+                          ..invTime = DateTime.now()
+                          ..invItems = box.values.toList()
+                          ..invTotal = invoiceTotal as int?;
+                        box2.put(box2.length + 1, x);
+
+                        if (prenterIndex == -1) {
+                          await Printing.layoutPdf(
+                              onLayout: (format) => generateInvoice(format));
+                        } else {
+                          Printer printer = printers[prenterIndex];
+                          await Printing.directPrintPdf(
+                              printer: printer,
+                              onLayout: (format) => generateInvoice(format));
+                        }
+
+                        box.clear();
                       }
 
-                      box.clear();
                       setState(() {
                         invoiceTotal = 0;
                       });
@@ -201,10 +488,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                     height: width * 0.12,
                     title: "فاتورة جديدة",
                     callbackAction: () {
-                      final box = Boxes.getItemForSell();
-                      final box2 = Boxes.getInvoice();
-                      box2.clear();
-                      box.clear();
+                      clearInvoice(initPosition);
                       setState(() {
                         invoiceTotal = 0;
                       });
@@ -212,70 +496,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                   ),
                   MyTextField(
                       fontSize: height * 0.02,
-                      onChange: (x) async {
-                        final box = Boxes.getItemForSell();
-
-
-
-                        // box.add(newMedicine);
-
-                        if (box.containsKey(searchControler.text.trim())) {
-                          var x =
-                              box.get(searchControler.text.trim())!.itemCount;
-                          final newMedicine = ItemForSell()
-                            ..barcode = searchControler.text.trim()
-                            ..medName =
-                                items.get(searchControler.text.trim())!.medName
-                            ..sicNote =
-                                items.get(searchControler.text.trim())!.sicNote
-                            ..docNote =
-                                items.get(searchControler.text.trim())!.docNote
-                            ..itemCount = x! + 1
-                            ..itemTotal = (x + 1) *
-                                items
-                                    .get(searchControler.text.trim())!
-                                    .selPrice!
-                            ..selPrice = items
-                                .get(searchControler.text.trim())!
-                                .selPrice;
-
-                          box.put(searchControler.text.trim(), newMedicine);
-                          setState(() {
-                            invoiceTotal = 0;
-                            for (int i = 0; i < itemSell.length; i++) {
-                              invoiceTotal =
-                                  invoiceTotal + itemSell.getAt(i)!.itemTotal!;
-                            }
-                          });
-                          searchControler.clear();
-                        } else {
-                          var x = 1;
-                          final newMedicine = ItemForSell()
-                            ..barcode = searchControler.text.trim()
-                            ..medName =
-                                items.get(searchControler.text.trim())!.medName
-                            ..sicNote =
-                                items.get(searchControler.text.trim())!.sicNote
-                            ..itemCount = x
-                            ..docNote =
-                                items.get(searchControler.text.trim())!.docNote
-                            ..itemTotal = x *
-                                items
-                                    .get(searchControler.text.trim())!
-                                    .selPrice!
-                            ..selPrice = items
-                                .get(searchControler.text.trim())!
-                                .selPrice;
-                          box.put(searchControler.text.trim(), newMedicine);
-                          setState(() {
-                            invoiceTotal = 0;
-                            for (int i = 0; i < itemSell.length; i++) {
-                              invoiceTotal =
-                                  invoiceTotal + itemSell.getAt(i)!.itemTotal!;
-                            }
-                          });
-                          searchControler.clear();
-                        }
+                      onChange: (x) {
+                        updateItemsList(initPosition, x);
                       },
                       callbackAction: () {},
                       width: width * 0.51,
@@ -283,14 +505,17 @@ class _NewInvoiceState extends State<NewInvoice> {
                       posRight: height * 0.07,
                       posTop: height * 0.1,
                       textEditingController: searchControler,
+                      myFocusNode: searchFocusNode,
                       title: "title",
                       maxline: 1),
                   Positioned(
                     top: height * 0.2,
                     right: height * 0.07,
                     child: ValueListenableBuilder<Box<ItemForSell>>(
-                      valueListenable: Boxes.getItemForSell().listenable(),
+                      valueListenable:
+                          Boxes.getItemForSell(box.name).listenable(),
                       builder: (context, box, _) {
+                        print(box.name);
                         final transactions =
                             box.values.toList().cast<ItemForSell>();
 
@@ -312,7 +537,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                           child: ListView.builder(
                             padding: EdgeInsets.only(
                                 top: height * 0.01, bottom: height * 0.12),
-                            itemCount: transactions.length,
+                            itemCount: box.length,
                             itemBuilder: (BuildContext context, int index) {
                               // invoiceTotal= transactions.first.itemCount!.toInt();
 
@@ -371,12 +596,12 @@ class _NewInvoiceState extends State<NewInvoice> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 20, top: 5),
+                                            padding:  EdgeInsets.only(
+                                                right: width*0.002, top: 5),
                                             child: IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    itemSell.deleteAt(index);
+                                                    box.deleteAt(index);
                                                   });
                                                 },
                                                 icon: Icon(
@@ -485,7 +710,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                                               _noteControllers[index],
                                           callbackAction: () {},
                                           onChange: (v) {
-                                            final box = Boxes.getItemForSell();
+                                            box = Boxes.getItemForSell(
+                                                'inv${initPosition}');
                                             box.getAt(index)!.sicNote = v;
                                             // print("MMMMMM ${ box.getAt(index)!.sicNote}");
                                           },
@@ -526,6 +752,552 @@ class _NewInvoiceState extends State<NewInvoice> {
                   ),
                 ],
               ),
-            ));
+            ),
+            ),
+            );
   }
+
+
+
+  void updateTotalInvoice(int initPosition) {
+    if (initPosition == 0) {
+      box = Boxes.getItemForSell("inv1");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 1) {
+      box = Boxes.getItemForSell("inv2");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 2) {
+      box = Boxes.getItemForSell("inv3");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 3) {
+      box = Boxes.getItemForSell("inv4");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 4) {
+      box = Boxes.getItemForSell("inv5");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 5) {
+      box = Boxes.getItemForSell("inv6");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 6) {
+      box = Boxes.getItemForSell("inv7");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 7) {
+      box = Boxes.getItemForSell("inv8");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 8) {
+      box = Boxes.getItemForSell("inv9");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    } else if (initPosition == 9) {
+      box = Boxes.getItemForSell("inv10");
+      invoiceTotal = 0;
+      for (int i = 0; i < box.length; i++) {
+        invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+      }
+    }
+  }
+
+  void clearInvoice(int initPosition) {
+    if (initPosition == 0) {
+      box = Boxes.getItemForSell("inv1");
+      box.clear();
+    } else if (initPosition == 1) {
+      box = Boxes.getItemForSell("inv2");
+      box.clear();
+    } else if (initPosition == 2) {
+      box.clear();
+    } else if (initPosition == 3) {
+      box = Boxes.getItemForSell("inv4");
+      box.clear();
+    } else if (initPosition == 4) {
+      box = Boxes.getItemForSell("inv5");
+      box.clear();
+    } else if (initPosition == 5) {
+      box = Boxes.getItemForSell("inv6");
+      box.clear();
+    } else if (initPosition == 6) {
+      box = Boxes.getItemForSell("inv7");
+      box.clear();
+    } else if (initPosition == 7) {
+      box = Boxes.getItemForSell("inv8");
+      box.clear();
+    } else if (initPosition == 8) {
+      box = Boxes.getItemForSell("inv9");
+      box.clear();
+    } else if (initPosition == 9) {
+      box = Boxes.getItemForSell("inv10");
+      box.clear();
+    }
+  }
+
+  void updateItemsList(int initPosition, String x) {
+    if (initPosition == 0) {
+      box = Boxes.getItemForSell("inv1");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 1) {
+      box = Boxes.getItemForSell("inv2");
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 2) {
+      box = Boxes.getItemForSell("inv3");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 3) {
+      box = Boxes.getItemForSell("inv4");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 4) {
+      box = Boxes.getItemForSell("inv5");
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 5) {
+      box = Boxes.getItemForSell("inv6");
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 6) {
+      box = Boxes.getItemForSell("inv7");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 7) {
+      box = Boxes.getItemForSell("inv8");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 8) {
+      box = Boxes.getItemForSell("inv9");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    } else if (initPosition == 9) {
+      box = Boxes.getItemForSell("inv10");
+
+      if (box.containsKey(searchControler.text.trim())) {
+        var x = box.get(searchControler.text.trim())!.itemCount;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemCount = x! + 1
+          ..itemTotal =
+              (x + 1) * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      } else {
+        var x = 1;
+        final newMedicine = ItemForSell()
+          ..barcode = searchControler.text.trim()
+          ..medName = items.get(searchControler.text.trim())!.medName
+          ..sicNote = items.get(searchControler.text.trim())!.sicNote
+          ..itemCount = x
+          ..docNote = items.get(searchControler.text.trim())!.docNote
+          ..itemTotal = x * items.get(searchControler.text.trim())!.selPrice!
+          ..selPrice = items.get(searchControler.text.trim())!.selPrice;
+        box.put(searchControler.text.trim(), newMedicine);
+        setState(() {
+          invoiceTotal = 0;
+          for (int i = 0; i < box.length; i++) {
+            invoiceTotal = invoiceTotal + box.getAt(i)!.itemTotal!;
+          }
+        });
+        searchControler.clear();
+        searchFocusNode.requestFocus();
+      }
+    }
+  }
+
+
+
+
 }

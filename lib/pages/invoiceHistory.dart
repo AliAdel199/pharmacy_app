@@ -1,20 +1,20 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pharmacy_app/constant.dart';
-import 'package:pharmacy_app/db/invoice.dart';
-import 'package:pharmacy_app/db/item_for_sell.dart';
-import 'package:intl/intl.dart' as international;
-import 'package:pharmacy_app/db/printInvoice.dart';
-import 'package:pharmacy_app/pages/invoice_history.dart';
-import 'package:pharmacy_app/widget/InvoiceTextField.dart';
-import 'package:pharmacy_app/widget/button_widget.dart';
-import 'package:pharmacy_app/widget/costomTextField.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
-import 'package:printing/printing.dart';
 import '../constant.dart';
+import '../db/invoice.dart';
+import '../db/item_for_sell.dart';
+import 'package:intl/intl.dart' as international;
+import '../db/printInvoice.dart';
+import '../pages/invoice_history.dart';
+import '../widget/InvoiceTextField.dart';
+import '../widget/button_widget.dart';
+import '../widget/costomTextField.dart';
+import '../widget/text_field_widget.dart';
+import 'package:printing/printing.dart';
+
 import '../boxes.dart';
 
 class InvoiceHistory extends StatefulWidget {
@@ -36,8 +36,9 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
   num invoiceTotal = 0;
   final TextEditingController searchControler = TextEditingController();
   var inv = Boxes.getInvoice();
+   FocusNode myFocusNode=FocusNode();
 
-  final itemSell = Boxes.getItemForSell();
+  final itemSell = Boxes.getItemForSell("itemForSell");
 
   bool isRTL(String text) {
     return international.Bidi.detectRtlDirectionality(text);
@@ -66,12 +67,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
   @override
   Widget build(BuildContext context) {
     final items = Boxes.getMedicine();
-    // for (int i = 0;
-    //     i < (inv.get(widget.invoiceNumber)!.invItems!.length);
-    //     i++) {
-    //   itemSell.put(inv.get(widget.invoiceNumber)!.invItems![i].barcode,
-    //       inv.get(widget.invoiceNumber)!.invItems![i]);
-    // }
+  
 
     invoiceTotal = 0;
     for (int i = 0; i < itemSell.length; i++) {
@@ -185,7 +181,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                       element.isDefault == true && element.isAvailable == true);
                   print(printers);
 
-                  final box = Boxes.getItemForSell();
+                  final box = Boxes.getItemForSell("itemForSell");
                   final box2 = Boxes.getInvoice();
                   Invoice x = Invoice()
                     ..invID = widget.invoiceNumber
@@ -205,13 +201,12 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                         onLayout: (format) => generateInvoice(format));
                   }
 
-
                   box.clear();
                   setState(() {
                     invoiceTotal = 0;
                   });
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => InvoicesHistory()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => InvoicesHistory()));
                 },
               ),
               MyButton(
@@ -221,7 +216,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                 height: width * 0.12,
                 title: "فاتورة جديدة",
                 callbackAction: () {
-                  final box = Boxes.getItemForSell();
+                  final box = Boxes.getItemForSell("itemForSell");
 
                   box.clear();
                   setState(() {
@@ -232,14 +227,14 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
               MyTextField(
                   fontSize: height * 0.02,
                   onChange: (x) {
-                    final box = Boxes.getItemForSell();
+                    final box = Boxes.getItemForSell("itemForSell");
 
                     // box.add(newMedicine);
 
                     if (box.containsKey(searchControler.text.trim())) {
                       var x = box.get(searchControler.text.trim())!.itemCount;
                       final newMedicine = ItemForSell()
-                      ..barcode=searchControler.text.trim()
+                        ..barcode = searchControler.text.trim()
                         ..medName =
                             items.get(searchControler.text.trim())!.medName
                         ..sicNote =
@@ -264,7 +259,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                     } else {
                       var x = 1;
                       final newMedicine = ItemForSell()
-                        ..barcode=searchControler.text.trim()
+                        ..barcode = searchControler.text.trim()
                         ..medName =
                             items.get(searchControler.text.trim())!.medName
                         ..sicNote =
@@ -292,14 +287,15 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                   height: height * 0.9,
                   posRight: height * 0.07,
                   posTop: height * 0.1,
-                  textEditingController: searchControler,
+                  textEditingController: searchControler,myFocusNode: myFocusNode,
                   title: "title",
                   maxline: 1),
               Positioned(
                 top: height * 0.2,
                 right: height * 0.07,
                 child: ValueListenableBuilder<Box<ItemForSell>>(
-                  valueListenable: Boxes.getItemForSell().listenable(),
+                  valueListenable:
+                      Boxes.getItemForSell("itemForSell").listenable(),
                   builder: (context, box, _) {
                     final transactions =
                         box.values.toList().cast<ItemForSell>();
@@ -515,7 +511,8 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                                           _noteControllers[index],
                                       callbackAction: () {},
                                       onChange: (v) {
-                                        final box = Boxes.getItemForSell();
+                                        final box =
+                                            Boxes.getItemForSell("itemForSell");
                                         box.getAt(index)!.sicNote = v;
                                         // print("MMMMMM ${ box.getAt(index)!.sicNote}");
                                       },

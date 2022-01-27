@@ -1,11 +1,8 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
-import 'package:pharmacy_app/db/item_for_sell.dart';
-import 'package:pharmacy_app/db/medicine.dart';
-import 'package:pharmacy_app/widget/button_widget.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
+import '../db/medicine.dart';
+import '../widget/button_widget.dart';
+import '../widget/text_field_widget.dart';
 
 import '../boxes.dart';
 import '../constant.dart';
@@ -24,10 +21,13 @@ class _AddNewItemState extends State<AddNewItem> {
   final TextEditingController _boxPrice = TextEditingController();
   final TextEditingController _docNote = TextEditingController();
   final TextEditingController _sicNote = TextEditingController();
+  FocusNode _barcodemyFocusNode = FocusNode();
+  FocusNode _itemNameFocusNode = FocusNode();
+  FocusNode _itemPriceFocusNode = FocusNode();
+  FocusNode _boxPriceFocusNode = FocusNode();
+  FocusNode _docNoteFocusNode = FocusNode();
+  FocusNode _sicNoteFocusNode = FocusNode();
 
-  late List aa;
-
-  //
   Future addItem(
       {String? barcode,
       String? name,
@@ -51,6 +51,7 @@ class _AddNewItemState extends State<AddNewItem> {
     _docNote.clear();
     _sicNote.clear();
     _boxPrice.clear();
+    _barcodemyFocusNode.requestFocus();
 
     // final mybox = Boxes.getTransactions();
     // final myTransaction = mybox.get('key');
@@ -58,42 +59,21 @@ class _AddNewItemState extends State<AddNewItem> {
     // mybox.keys;
   }
 
-  Future addItemSell(
-      {String? barcode, String? name, String? sicNote, int? selPrice}) async {
-    final box = Boxes.getItemForSell();
 
-    // box.add(newMedicine);
-
-    if (box.containsKey(barcode)) {
-      var x = box.get(barcode)!.itemCount;
-      final newMedicine = ItemForSell()
-        ..medName = name
-        ..sicNote = sicNote
-        ..itemCount = x! + 1
-        ..itemTotal = (x + 1) * selPrice!
-        ..selPrice = selPrice;
-
-      box.put(barcode, newMedicine);
-    } else {
-      final newMedicine = ItemForSell()
-        ..medName = name
-        ..sicNote = sicNote
-        ..itemCount = 1
-        ..selPrice = selPrice;
-      box.put(barcode, newMedicine);
-    }
-
-    // final mybox = Boxes.getTransactions();
-    // final myTransaction = mybox.get('key');
-    // mybox.values;
-    // mybox.keys;
+  void clearFields() {
+    _barcode.clear();
+    _sicNote.clear();
+    _boxPrice.clear();
+    _itemPrice.clear();
+    _itemName.clear();
+    _docNote.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     DesktopWindow.setMinWindowSize(Size(1050, 800));
-
-    var itemForSell = Boxes.getItemForSell();
+    _barcodemyFocusNode.requestFocus();
+    // var itemForSell = Boxes.getItemForSell();
     var invoice = Boxes.getInvoice();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -158,6 +138,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.1,
                 title: "الباركود",
                 textEditingController: _barcode,
+                myFocusNode: _barcodemyFocusNode,
               ),
               Positioned(
                 top: height * 0.06,
@@ -181,6 +162,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.1,
                 title: "ملاحظات شخصية",
                 textEditingController: _docNote,
+                myFocusNode: _docNoteFocusNode,
               ),
               Positioned(
                 top: height * 0.21,
@@ -204,6 +186,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.25,
                 title: "اسم المنتج",
                 textEditingController: _itemName,
+                myFocusNode: _itemNameFocusNode,
               ),
               Positioned(
                 top: height * 0.35,
@@ -227,6 +210,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.4,
                 title: "سعر المفرد",
                 textEditingController: _itemPrice,
+                myFocusNode: _itemPriceFocusNode,
               ),
               Positioned(
                 top: height * 0.35,
@@ -250,6 +234,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.4,
                 title: "سعر الصندوق",
                 textEditingController: _boxPrice,
+                myFocusNode: _boxPriceFocusNode,
               ),
               Positioned(
                 top: height * 0.51,
@@ -273,6 +258,7 @@ class _AddNewItemState extends State<AddNewItem> {
                 posTop: height * 0.55,
                 title: "ملاحظات للمريض",
                 textEditingController: _sicNote,
+                myFocusNode: _sicNoteFocusNode,
               ),
               MyButton(
                   width: height * 0.2,
@@ -281,7 +267,7 @@ class _AddNewItemState extends State<AddNewItem> {
                   posTop: height * 0.63,
                   title: "اضافة",
                   callbackAction: () => addItem(
-                      barcode: _barcode.text,
+                         barcode: _barcode.text,
                       name: _itemName.text,
                       boxPrice: int.parse(_boxPrice.text),
                       selPrice: int.parse(_itemPrice.text),
@@ -294,8 +280,11 @@ class _AddNewItemState extends State<AddNewItem> {
                   posTop: height * 0.63,
                   title: "تعديل",
                   callbackAction: () async {
-                    itemForSell.clear();
+                    clearFields();
+                    _barcodemyFocusNode.requestFocus();
+                    // itemForSell.clear();
                   }),
+                  
             ],
           ),
         ));

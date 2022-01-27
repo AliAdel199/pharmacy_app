@@ -1,13 +1,10 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmacy_app/boxes.dart';
-import 'package:pharmacy_app/constant.dart';
-import 'package:pharmacy_app/db/htmlInvoice.dart';
-import 'package:pharmacy_app/db/printInvoice.dart';
-import 'package:pharmacy_app/db/rrr.dart';
-import 'package:pharmacy_app/pages/ItemInfo.dart';
-import 'package:pharmacy_app/widget/text_field_widget.dart';
-import 'package:printing/printing.dart';
+import '../boxes.dart';
+import '../constant.dart';
+import '../pages/ItemInfo.dart';
+import '../widget/text_field_widget.dart';
+
 
 class ItemsList extends StatefulWidget {
   const ItemsList({Key? key}) : super(key: key);
@@ -18,6 +15,7 @@ class ItemsList extends StatefulWidget {
 
 class _ItemsListState extends State<ItemsList> {
   TextEditingController textEditingController = TextEditingController();
+  FocusNode textEditingFocusNode = FocusNode();
 
   var data = Boxes.getMedicine();
 
@@ -25,6 +23,9 @@ class _ItemsListState extends State<ItemsList> {
   Widget build(BuildContext context) {
     DesktopWindow.setMinWindowSize(Size(1050, 800));
     final orientation = MediaQuery.of(context).orientation;
+    data.values.forEach((element) {
+      print("hhhh ${element.key}");
+    });
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -60,6 +61,7 @@ class _ItemsListState extends State<ItemsList> {
                 width: width * 0.5,
                 height: height * 0.8,
                 textEditingController: textEditingController,
+                myFocusNode: textEditingFocusNode,
                 callbackAction: () {},
                 maxline: 1,
                 posTop: height * 0.05,
@@ -116,6 +118,11 @@ class _ItemsListState extends State<ItemsList> {
                                   ],
                                 ),
                               ),
+                              Divider(
+                                thickness: 3,
+                                endIndent: 20,
+                                indent: 20,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: Row(
@@ -142,6 +149,11 @@ class _ItemsListState extends State<ItemsList> {
                                     )
                                   ],
                                 ),
+                              ),
+                              Divider(
+                                thickness: 3,
+                                endIndent: 20,
+                                indent: 20,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
