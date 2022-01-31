@@ -3,11 +3,13 @@ import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pharmacy_app/boxes.dart';
 import '../db/invoice.dart';
 import '../db/item_for_sell.dart';
 import '../db/medicine.dart';
 
 
+import 'db/notes.dart';
 import 'pages/home_page.dart';
 
 const apiKey = 'AIzaSyBIJefPHqhfp7isoQ3aJ4wKcVvEw-6Rsjo';
@@ -43,7 +45,9 @@ void main() async{
   Hive.registerAdapter(MedicineAdapter());
   Hive.registerAdapter(ItemForSellAdapter());
   Hive.registerAdapter(InvoiceAdapter());
+   Hive.registerAdapter(NotesAdapter());
   await Hive.openBox<Medicine>('medicine');
+   await Hive.openBox<Notes>('notes');
   await Hive.openBox<ItemForSell>('itemForSell');
   await Hive.openBox<ItemForSell>('inv1');
   await Hive.openBox<ItemForSell>('inv2');
@@ -57,6 +61,7 @@ void main() async{
   await Hive.openBox<ItemForSell>('inv10');
   await Hive.openBox<Invoice>('invoice');
   // await Hive.openBox('test');
+  // Boxes.getNotes().clear();
   runApp(const MyApp());
 }
 
@@ -67,8 +72,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
-      title: 'Flutter Demo',
+      builder: EasyLoading.init(),
+      title: 'Flutter Demo',debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

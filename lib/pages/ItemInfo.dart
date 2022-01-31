@@ -1,5 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../db/medicine.dart';
 import '../widget/button_widget.dart';
 import '../widget/text_field_widget.dart';
@@ -30,6 +33,7 @@ class _ItemInfoState extends State<ItemInfo> {
    final FocusNode _docNoteFocusNode=FocusNode();
    final FocusNode _sicNoteFocusNode=FocusNode();
    late List aa;
+  var fireData = Firestore.instance.collection("Medicine");
 
   final box = Boxes.getMedicine();
 
@@ -55,15 +59,21 @@ class _ItemInfoState extends State<ItemInfo> {
     // mybox.values;
     // mybox.keys;
   }
-
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
     _barcode.text = widget.barcode;
     _itemName.text = box.get(widget.barcode)!.medName.toString();
     _boxPrice.text = box.get(widget.barcode)!.boxPrice.toString();
     _sicNote.text = box.get(widget.barcode)!.sicNote.toString();
     _itemPrice.text = box.get(widget.barcode)!.selPrice.toString();
     _docNote.text = box.get(widget.barcode)!.docNote.toString();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
     DesktopWindow.setMinWindowSize(Size(1050, 800));
 
     double width = MediaQuery.of(context).size.width;
@@ -253,28 +263,71 @@ class _ItemInfoState extends State<ItemInfo> {
                   title: "اضافة",
                   callbackAction: () => addItem(
                       barcode: _barcode.text,
-                      name: _itemName.text,
-                      boxPrice: int.parse(_boxPrice.text),
-                      selPrice: int.parse(_itemPrice.text),
-                      docNote: _docNote.text,
-                      sicNote: _sicNote.text)),
+                  name: _itemName.text,
+                  boxPrice:_boxPrice.text!=""? int.parse(_boxPrice.text):0,
+                  selPrice:_itemPrice.text!=""? int.parse(_itemPrice.text):0,
+                  docNote: _docNote.text,
+                  sicNote: _sicNote.text)),
               MyButton(
                   width: height * 0.2,
                   height: height * 0.2,
                   posRight: height * 0.87,
                   posTop: height * 0.63,
                   title: "حذف",
-                  callbackAction: () {
-                    box.delete(_barcode.text);
-                    _barcode.clear();
-                    _itemName.clear();
-                    _itemPrice.clear();
-                    _docNote.clear();
-                    _sicNote.clear();
-                    _boxPrice.clear();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => ItemsList()));
-                  }),
+                  callbackAction: () async {
+                var connectivityResult =
+                    await (Connectivity().checkConnectivity());
+
+                if (connectivityResult != ConnectivityResult.none) {
+                  setState(() {
+                    EasyLoading.show(
+                        status: 'loading...',
+                        maskType: EasyLoadingMaskType.black);
+                  });
+
+                  await fireData.document(widget.barcode.toString()).delete();
+                  box.delete(widget.barcode);
+                  
+
+                  setState(() {
+                    EasyLoading.showSuccess('Great Success!');
+                  });
+                  
+                  // I am connected to a mobile network.
+                } else {
+                  // I am connected to a wifi network.
+                  AlertDialog(
+                    title: Text(
+                      "تنبيه",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                    content: Text(
+                      "لم يتم حذف العنصر لعدم الاتصال بالانترنت حاول مرة اخرى عند الاتصال.",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                  );
+                }
+
+                _barcode.clear();
+                _itemName.clear();
+                _itemPrice.clear();
+                _docNote.clear();
+                _sicNote.clear();
+                _boxPrice.clear();
+               
+              },),
             ],
           ),
         ));

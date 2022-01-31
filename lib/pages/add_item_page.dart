@@ -1,5 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../db/medicine.dart';
 import '../widget/button_widget.dart';
 import '../widget/text_field_widget.dart';
@@ -28,6 +31,9 @@ class _AddNewItemState extends State<AddNewItem> {
   FocusNode _docNoteFocusNode = FocusNode();
   FocusNode _sicNoteFocusNode = FocusNode();
 
+    var fireData = Firestore.instance.collection("Medicine");
+
+
   Future addItem(
       {String? barcode,
       String? name,
@@ -43,8 +49,57 @@ class _AddNewItemState extends State<AddNewItem> {
       ..selPrice = selPrice;
 
     final box = Boxes.getMedicine();
-
     box.put(barcode, newMedicine);
+  var connectivityResult =
+                    await (Connectivity().checkConnectivity());
+                     if (connectivityResult != ConnectivityResult.none) {
+                  setState(() {
+                    EasyLoading.show(
+                        status: 'loading...',
+                        maskType: EasyLoadingMaskType.black);
+                  });
+
+                 
+      await fireData.document(barcode!).set({
+        "medName": name,
+        "boxPrice": boxPrice,
+        "sellPrice": selPrice,
+        "sicNote": sicNote,
+        "docNote": docNote
+      });
+          
+
+                  setState(() {
+                    EasyLoading.showSuccess('Great Success!');
+                  });
+                  // I am connected to a mobile network.
+                } else {
+                  // I am connected to a wifi network.
+                  AlertDialog(
+                    title: Text(
+                      "تنبيه",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                    content: Text(
+                        "تم حفظ البيانات بدون الرفع الى الانترنت لعدم وجود الاتصال !!!",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                  );
+                }
+
+    
     _barcode.clear();
     _itemName.clear();
     _itemPrice.clear();

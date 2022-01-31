@@ -1,5 +1,6 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../boxes.dart';
 import '../widget/text_field_widget.dart';
 
@@ -73,7 +74,10 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                   height: height,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 140),
-                    child: GridView.builder(
+                    child: ValueListenableBuilder(
+                      valueListenable: data.listenable(),
+                      builder: (context, box, widget) {
+                        return GridView.builder(
                       itemCount: data.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount:
@@ -187,7 +191,10 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                           ),
                         );
                       },
-                    ),
+                    );
+                      })
+                    
+                    
                   ),
                 ),
                 top: height * 0.15,

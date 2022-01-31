@@ -1,5 +1,6 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/pages/myNotes.dart';
 import '../constant.dart';
 import '../pages/add_item_page.dart';
 import '../pages/new_invoice.dart';
@@ -58,7 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   posTop: width * 0.14,
                   title: "فاتورة\n جديدة",
                   callbackAction: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => NewInvoice()))),
+                      MaterialPageRoute(builder: (context) => NewInvoice(),),),),
+                         MyButton(
+                  width: width * 0.17,
+                  height: width * 0.17,
+                  posRight: width * 0.5,
+                  posTop: width * 0.14,
+                  title: "ملاحظاتي",
+                  callbackAction: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MyNotes(),),),),
               MyButton(
                   width: width * 0.17,
                   height: width * 0.17,
