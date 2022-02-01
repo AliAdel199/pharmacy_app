@@ -33,6 +33,7 @@ class _ItemsListState extends State<ItemsList> {
         .listen((ConnectivityResult connectivityResult) async {
       // Got a new connectivity status!
       if (connectivityResult != ConnectivityResult.none) {
+        
         setState(() {
           EasyLoading.show(
             status: 'Get Data...',

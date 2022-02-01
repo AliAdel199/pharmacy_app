@@ -1,5 +1,13 @@
+
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:firebase_core_desktop/firebase_core_desktop.dart';
+import 'package:firedart/firedart.dart';
+import 'package:firedart/firedart.dart' as ff;
+import 'package:firedart/generated/google/protobuf/wrappers.pbjson.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../boxes.dart';
 import '../widget/text_field_widget.dart';
@@ -20,6 +28,71 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
    FocusNode myFocusNode=FocusNode();
 
   var data = Boxes.getInvoice();
+    var fireData = Firestore.instance.collection("Invoices");
+
+    void uploadeInvoce()async{
+
+      
+     var subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult connectivityResult) async {
+                    if (connectivityResult != ConnectivityResult.none) {
+                      print("djhjkdhdhkjdhjkdhkjdhkddkh");
+                  setState(() {
+                    EasyLoading.show(
+                        status: 'loading...',
+                        maskType: EasyLoadingMaskType.black);
+                  });
+   data.values.forEach((element) async{
+                  await fireData.document(element.invID.toString()).set({
+                    "invID":element.invID,
+                    "invDate":element.invDate,
+                    // "invItems":Fired.Firestore.FieldValue.arrayUnion,
+                    "invTotal":element.invTotal,
+                    "invTime":element.invTime
+      });  
+
+
+    });
+
+                  setState(() {
+                    EasyLoading.showSuccess('Great Success!');
+                  });
+                  // I am connected to a mobile network.
+                } else {
+                  // I am connected to a wifi network.
+                  AlertDialog(
+                    title: Text(
+                      "تنبيه",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                    content: Text(
+                        "تم حفظ البيانات بدون الرفع الى الانترنت لعدم وجود الاتصال !!!",
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: fontColor,
+                      ),
+                    ),
+                  );
+                }});
+
+    }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+  uploadeInvoce();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
