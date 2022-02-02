@@ -146,6 +146,10 @@ class _AddNewItemState extends State<AddNewItem> {
                     height: height,
                     fit: BoxFit.cover,
                   )),
+                  Positioned( top: 10,left: 10 ,child:  RaisedButton(
+              onPressed: () => _selectDate(context),
+              child: Text('Select date'),
+            ),),
               Positioned(
                 top: 10,
                 left: 10,
@@ -348,5 +352,24 @@ class _AddNewItemState extends State<AddNewItem> {
             ],
           ),
         ));
+  }
+
+
+
+
+    DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print(selectedDate.difference(DateTime.now()).inDays);
+      });
+    }
   }
 }

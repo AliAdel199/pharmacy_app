@@ -152,13 +152,7 @@ class _MyNotesState extends State<MyNotes> {
                   builder: (context) {
                     return ShowEditDailogNote(height: height, width: width, noteIndex: index);
                   }),
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (context) {},
-                              //     //  NoteInfo(
-                              //     //     barcode: data.getAt(index)!.key.toString()),
-                              //   ),
-                              // ),
+                         
                               child: Card(
                                 color: buttonColor,
                                 child: Column(

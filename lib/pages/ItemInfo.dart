@@ -54,10 +54,6 @@ class _ItemInfoState extends State<ItemInfo> {
 
     box.put(barcode, newMedicine);
 
-    // final mybox = Boxes.getTransactions();
-    // final myTransaction = mybox.get('key');
-    // mybox.values;
-    // mybox.keys;
   }
   @override
   void initState() {

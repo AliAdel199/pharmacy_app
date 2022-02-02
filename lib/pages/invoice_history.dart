@@ -2,7 +2,7 @@
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:firebase_core_desktop/firebase_core_desktop.dart';
+// import 'package:firebase_core_desktop/firebase_core_desktop.dart';
 import 'package:firedart/firedart.dart';
 import 'package:firedart/firedart.dart' as ff;
 import 'package:firedart/generated/google/protobuf/wrappers.pbjson.dart';
@@ -36,6 +36,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
      var subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult connectivityResult) async {
+
                     if (connectivityResult != ConnectivityResult.none) {
                       print("djhjkdhdhkjdhjkdhkjdhkddkh");
                   setState(() {
@@ -47,7 +48,7 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                   await fireData.document(element.invID.toString()).set({
                     "invID":element.invID,
                     "invDate":element.invDate,
-                    // "invItems":Fired.Firestore.FieldValue.arrayUnion,
+                    // "invItems":[element.invItems!.forEach((element) { })],
                     "invTotal":element.invTotal,
                     "invTime":element.invTime
       });  

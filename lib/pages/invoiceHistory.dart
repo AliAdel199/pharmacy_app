@@ -320,7 +320,6 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                             top: height * 0.01, bottom: height * 0.12),
                         itemCount: transactions.length,
                         itemBuilder: (BuildContext context, int index) {
-                          // invoiceTotal= transactions.first.itemCount!.toInt();
 
                           _countControllers.add(TextEditingController());
                           _noteControllers.add(TextEditingController());
@@ -329,37 +328,6 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                           _totalPriceControllers.add(TextEditingController());
                           _itemNameControllers.add(TextEditingController());
 
-                          // _countControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .itemCount
-                          //     .toString();
-                          // _sellPriceControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .selPrice
-                          //     .toString();
-                          // _noteControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .sicNote
-                          //     .toString();
-                          // _docNoteControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .docNote
-                          //     .toString();
-                          // // transactions[index].medName.toString();
-                          // _totalPriceControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .itemTotal
-                          //     .toString();
-                          // _itemNameControllers[index].text = inv
-                          //     .get(widget.invoiceNumber)!
-                          //     .invItems![index]
-                          //     .medName
-                          //     .toString();
                           _countControllers[index].text =
                               transactions[index].itemCount.toString();
                           _sellPriceControllers[index].text =
@@ -372,9 +340,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                               transactions[index].medName.toString();
                           _totalPriceControllers[index].text =
                               transactions[index].itemTotal.toString();
-                          // print("KLKLKL ${transactions.length}");
-                          // final transaction = transactions[index].itemTotal;
-                          // final item = transactions[index];
+               
 
                           return Padding(
                             padding: EdgeInsets.symmetric(

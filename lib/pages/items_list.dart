@@ -25,8 +25,7 @@ class _ItemsListState extends State<ItemsList> {
   var fireData = Firestore.instance.collection("Medicine");
 
   void getDataFromFireStore() async {
-    //  var connectivityResult = await (Connectivity().checkConnectivity());
-    //  print(connectivityResult);
+ 
 
     var subscription = Connectivity()
         .onConnectivityChanged

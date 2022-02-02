@@ -260,27 +260,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
-  firebase_core_dart:
-    dependency: transitive
-    description:
-      name: firebase_core_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1-dev.2"
-  firebase_core_desktop:
-    dependency: "direct main"
-    description:
-      name: firebase_core_desktop
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1-dev.3"
-  firebase_core_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_core_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.2.4"
   firedart:
     dependency: "direct main"
     description:
@@ -314,6 +293,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_local_notifications_linux:
+    dependency: "direct main"
+    description:
+      name: flutter_local_notifications_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1+1"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0"
   flutter_spinkit:
     dependency: transitive
     description:
