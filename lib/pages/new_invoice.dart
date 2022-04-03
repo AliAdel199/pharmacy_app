@@ -1,6 +1,6 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import '../constant.dart';
@@ -83,7 +83,9 @@ class _NewInvoiceState extends State<NewInvoice> {
               onScroll: (position) => print('$position'),
               stub: Container(),
               initPosition: initPosition,
+             
               itemCount: data.length,
+
               tabBuilder: (context, index) => Container(
                   width: 200,
                   child: Row(
@@ -141,6 +143,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                           icon: Icon(Icons.add))
                     ],
                   )),
+             
               pageBuilder: (context, tabIndex) => Stack(
                 alignment: Alignment.centerRight,
                 children: [
@@ -180,13 +183,13 @@ class _NewInvoiceState extends State<NewInvoice> {
                     right: height * 0.09,
                     child: Text(
                       "  بحث",
-                      style: GoogleFonts.tajawal(
-                        textStyle: Theme.of(context).textTheme.headline4,
-                        fontSize: height * 0.03,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: fontColor,
-                      ),
+                      // style: GoogleFonts.tajawal(
+                      //   textStyle: Theme.of(context).textTheme.headline4,
+                      //   fontSize: height * 0.03,
+                      //   fontWeight: FontWeight.w700,
+                      //   fontStyle: FontStyle.italic,
+                      //   color: fontColor,
+                      // ),
                     ),
                   ),
                   Positioned(
@@ -212,28 +215,28 @@ class _NewInvoiceState extends State<NewInvoice> {
                           Center(
                             child: Text(
                               "الاجمالي",
-                              style: GoogleFonts.tajawal(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: height * 0.03,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                              ),
+                              // style: GoogleFonts.tajawal(
+                              //   textStyle:
+                              //       Theme.of(context).textTheme.headline4,
+                              //   fontSize: height * 0.03,
+                              //   fontWeight: FontWeight.w700,
+                              //   fontStyle: FontStyle.italic,
+                              //   color: Colors.white,
+                              // ),
                             ),
                           ),
                           Divider(),
                           Center(
                             child: Text(
                               " د.ع  $invoiceTotal",
-                              style: GoogleFonts.tajawal(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: height * 0.03,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                              ),
+                              // style: GoogleFonts.tajawal(
+                              //   textStyle:
+                              //       Theme.of(context).textTheme.headline4,
+                              //   fontSize: height * 0.03,
+                              //   fontWeight: FontWeight.w700,
+                              //   fontStyle: FontStyle.italic,
+                              //   color: Colors.white,
+                              // ),
                             ),
                           ),
                         ],
@@ -497,7 +500,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                   MyTextField(
                       fontSize: height * 0.02,
                       onChange: (x) {
-                        updateItemsList(initPosition, x);
+                        updateItemsList(initPosition);
                       },
                       callbackAction: () {},
                       width: width * 0.51,
@@ -856,7 +859,7 @@ class _NewInvoiceState extends State<NewInvoice> {
     }
   }
 
-  void updateItemsList(int initPosition, String x) {
+  void updateItemsList(int initPosition,) {
     if (initPosition == 0) {
       box = Boxes.getItemForSell("inv1");
 

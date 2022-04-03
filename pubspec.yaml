@@ -35,13 +35,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firedart: ^0.9.0+1
-  fixnum: ^1.0.0
-  grpc: ^3.0.2
+  # fixnum: ^1.0.0
+  # grpc: ^3.0.2
   http: ^0.13.4
-  protobuf: ^2.0.1
+  # protobuf: ^2.0.1
   hive: ^2.0.5
   hive_flutter: ^1.1.0
-  google_fonts: ^2.2.0
+  # google_fonts: ^2.2.0
   intl: ^0.17.0
   # firebase_core_desktop: ^0.1.1-dev.3
 #  keyboard_info: ^0.2.0
@@ -50,7 +50,9 @@ dependencies:
   tabbed_view: ^1.10.0
   flutter_easyloading: ^3.0.3
   connectivity_plus: ^2.2.0
-  flutter_local_notifications_linux: ^0.4.1+1
+  # flutter_local_notifications_linux: ^0.4.1+1
+  badges: ^2.0.2
+  # flutter_svg: ^0.17.3+1
 
 dev_dependencies:
   hive_generator: ^1.1.1

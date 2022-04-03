@@ -11,4 +11,4 @@ PRODUCT_NAME = pharmacy_app
 PRODUCT_BUNDLE_IDENTIFIER = com.aliadel.pharmacyApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2021 com.aliadel. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.aliadel. All rights reserved.

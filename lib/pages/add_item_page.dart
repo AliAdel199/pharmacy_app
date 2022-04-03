@@ -3,6 +3,8 @@ import 'package:desktop_window/desktop_window.dart';
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+import 'package:pharmacy_app/db/expireItems.dart';
 import '../db/medicine.dart';
 import '../widget/button_widget.dart';
 import '../widget/text_field_widget.dart';
@@ -31,8 +33,7 @@ class _AddNewItemState extends State<AddNewItem> {
   FocusNode _docNoteFocusNode = FocusNode();
   FocusNode _sicNoteFocusNode = FocusNode();
 
-    var fireData = Firestore.instance.collection("Medicine");
-
+  var fireData = Firestore.instance.collection("Medicine");
 
   Future addItem(
       {String? barcode,
@@ -50,16 +51,13 @@ class _AddNewItemState extends State<AddNewItem> {
 
     final box = Boxes.getMedicine();
     box.put(barcode, newMedicine);
-  var connectivityResult =
-                    await (Connectivity().checkConnectivity());
-                     if (connectivityResult != ConnectivityResult.none) {
-                  setState(() {
-                    EasyLoading.show(
-                        status: 'loading...',
-                        maskType: EasyLoadingMaskType.black);
-                  });
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        EasyLoading.show(
+            status: 'loading...', maskType: EasyLoadingMaskType.black);
+      });
 
-                 
       await fireData.document(barcode!).set({
         "medName": name,
         "boxPrice": boxPrice,
@@ -67,39 +65,44 @@ class _AddNewItemState extends State<AddNewItem> {
         "sicNote": sicNote,
         "docNote": docNote
       });
-          
 
-                  setState(() {
-                    EasyLoading.showSuccess('Great Success!');
-                  });
-                  // I am connected to a mobile network.
-                } else {
-                  // I am connected to a wifi network.
-                  AlertDialog(
-                    title: Text(
-                      "تنبيه",
-                      style: TextStyle(
-                        fontFamily: 'Tajawal',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: fontColor,
-                      ),
-                    ),
-                    content: Text(
-                        "تم حفظ البيانات بدون الرفع الى الانترنت لعدم وجود الاتصال !!!",
-                      style: TextStyle(
-                        fontFamily: 'Tajawal',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: fontColor,
-                      ),
-                    ),
-                  );
-                }
+      if(expireDate!=""){
+        final expire=Boxes.getExpires();
+        final newExp=ExpireItems(barcode: barcode,itemName: name ,expired: selectedDate);
+        expire.add(newExp);
 
-    
+      }
+
+      setState(() {
+        EasyLoading.showSuccess('Great Success!');
+      });
+      // I am connected to a mobile network.
+    } else {
+      // I am connected to a wifi network.
+      AlertDialog(
+        title: Text(
+          "تنبيه",
+          style: TextStyle(
+            fontFamily: 'Tajawal',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: fontColor,
+          ),
+        ),
+        content: Text(
+          "تم حفظ البيانات بدون الرفع الى الانترنت لعدم وجود الاتصال !!!",
+          style: TextStyle(
+            fontFamily: 'Tajawal',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: fontColor,
+          ),
+        ),
+      );
+    }
+
     _barcode.clear();
     _itemName.clear();
     _itemPrice.clear();
@@ -146,10 +149,41 @@ class _AddNewItemState extends State<AddNewItem> {
                     height: height,
                     fit: BoxFit.cover,
                   )),
-                  Positioned( top: 10,left: 10 ,child:  RaisedButton(
-              onPressed: () => _selectDate(context),
-              child: Text('Select date'),
-            ),),
+              Positioned(
+                   top: height * 0.5,
+                right: height * 0.63,
+                  child: GestureDetector(onTap: ()=>_selectDate(context),
+                    child: Container(child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                     
+                      Icon(Icons.date_range_outlined,size: height*0.04,),
+                      Text(expireDate==""? "  تاريخ الانتهاء":expireDate,
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: height * 0.03,
+                        fontWeight: FontWeight.w700,
+                        color: fontColor,
+                      )),],),
+                      width: width * 0.3,
+                      height: height * 0.06,
+                      decoration:   BoxDecoration(
+                          borderRadius: BorderRadius.circular(width * 0.05),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: fontColor,
+                              offset: Offset(1, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                    ),
+                  )
+                  //        RaisedButton(
+                  //   onPressed: () => _selectDate(context),
+                  //   child: Text('Select date'),
+                  // ),
+                  ),
               Positioned(
                 top: 10,
                 left: 10,
@@ -353,11 +387,8 @@ class _AddNewItemState extends State<AddNewItem> {
           ),
         ));
   }
-
-
-
-
-    DateTime selectedDate = DateTime.now();
+  String expireDate="";
+  DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -368,6 +399,7 @@ class _AddNewItemState extends State<AddNewItem> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        expireDate=DateFormat('yyyy-MM-dd').format(selectedDate);
         print(selectedDate.difference(DateTime.now()).inDays);
       });
     }

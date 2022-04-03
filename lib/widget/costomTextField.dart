@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import '../constant.dart';
 
@@ -37,13 +37,13 @@ class CustomTextField extends StatelessWidget {
 
           controller: textEditingController,
           maxLines: maxline,
-          style: GoogleFonts.tajawal(
-            textStyle: Theme.of(context).textTheme.headline4,
-            fontSize: height * 0.023,
-            fontWeight: FontWeight.w900,
-            fontStyle: FontStyle.italic,
-            color: fontColor,
-          ),
+          // style: GoogleFonts.tajawal(
+          //   textStyle: Theme.of(context).textTheme.headline4,
+          //   fontSize: height * 0.023,
+          //   fontWeight: FontWeight.w900,
+          //   fontStyle: FontStyle.italic,
+          //   color: fontColor,
+          // ),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white70,

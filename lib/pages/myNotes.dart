@@ -178,16 +178,7 @@ class _MyNotesState extends State<MyNotes> {
                                               color: fontColor,
                                             ),
                                           ),
-                                          Text(
-                                            " العنوان : ",
-                                            style: TextStyle(
-                                              fontFamily: 'Tajawal',
-                                              fontSize: width * 0.012,
-                                              fontWeight: FontWeight.w700,
-                                              color: fontColor,
-                                            ),
-                                            textDirection: TextDirection.rtl,
-                                          )
+                                         
                                         ],
                                       ),
                                     ),

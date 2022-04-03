@@ -32,6 +32,7 @@ class _ItemsListState extends State<ItemsList> {
         .listen((ConnectivityResult connectivityResult) async {
       // Got a new connectivity status!
       if (connectivityResult != ConnectivityResult.none) {
+        data.clear();
         
         setState(() {
           EasyLoading.show(
@@ -40,6 +41,7 @@ class _ItemsListState extends State<ItemsList> {
           );
         });
         var dataStore = await fireData.get();
+        
         dataStore.forEach((element) {
           print(element);
 

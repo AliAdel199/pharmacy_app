@@ -1,6 +1,6 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import '../constant.dart';
@@ -110,13 +110,13 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                 right: height * 0.09,
                 child: Text(
                   "  بحث",
-                  style: GoogleFonts.tajawal(
-                    textStyle: Theme.of(context).textTheme.headline4,
-                    fontSize: height * 0.03,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
-                    color: fontColor,
-                  ),
+                  // style: GoogleFonts.tajawal(
+                  //   textStyle: Theme.of(context).textTheme.headline4,
+                  //   fontSize: height * 0.03,
+                  //   fontWeight: FontWeight.w700,
+                  //   fontStyle: FontStyle.italic,
+                  //   color: fontColor,
+                  // ),
                 ),
               ),
               Positioned(
@@ -142,26 +142,26 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                       Center(
                         child: Text(
                           "الاجمالي",
-                          style: GoogleFonts.tajawal(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: height * 0.03,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white,
-                          ),
+                          // style: GoogleFonts.tajawal(
+                          //   textStyle: Theme.of(context).textTheme.headline4,
+                          //   fontSize: height * 0.03,
+                          //   fontWeight: FontWeight.w700,
+                          //   fontStyle: FontStyle.italic,
+                          //   color: Colors.white,
+                          // ),
                         ),
                       ),
                       Divider(),
                       Center(
                         child: Text(
                           " د.ع  $invoiceTotal",
-                          style: GoogleFonts.tajawal(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: height * 0.03,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white,
-                          ),
+                          // style: GoogleFonts.tajawal(
+                          //   textStyle: Theme.of(context).textTheme.headline4,
+                          //   fontSize: height * 0.03,
+                          //   fontWeight: FontWeight.w700,
+                          //   fontStyle: FontStyle.italic,
+                          //   color: Colors.white,
+                          // ),
                         ),
                       ),
                     ],

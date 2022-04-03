@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'expireItems.dart';
+part of 'expiresoon.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ExpireItemsAdapter extends TypeAdapter<ExpireItems> {
+class ExpireItemSoonAdapter extends TypeAdapter<ExpireItemSoon> {
   @override
-  final int typeId = 5;
+  final int typeId = 6;
 
   @override
-  ExpireItems read(BinaryReader reader) {
+  ExpireItemSoon read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ExpireItems(
+    return ExpireItemSoon(
       barcode: fields[0] as String?,
       expired: fields[2] as DateTime?,
       itemName: fields[1] as String?,
@@ -24,7 +24,7 @@ class ExpireItemsAdapter extends TypeAdapter<ExpireItems> {
   }
 
   @override
-  void write(BinaryWriter writer, ExpireItems obj) {
+  void write(BinaryWriter writer, ExpireItemSoon obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -41,7 +41,7 @@ class ExpireItemsAdapter extends TypeAdapter<ExpireItems> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExpireItemsAdapter &&
+      other is ExpireItemSoonAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

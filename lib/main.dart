@@ -1,13 +1,13 @@
-
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pharmacy_app/boxes.dart';
+// import 'package:pharmacy_app/boxes.dart';
+import 'package:pharmacy_app/db/expireItems.dart';
+import 'package:pharmacy_app/db/expiresoon.dart';
 import '../db/invoice.dart';
 import '../db/item_for_sell.dart';
 import '../db/medicine.dart';
-
 
 import 'db/notes.dart';
 import 'pages/home_page.dart';
@@ -16,7 +16,6 @@ const apiKey = 'AIzaSyBIJefPHqhfp7isoQ3aJ4wKcVvEw-6Rsjo';
 const projectId = 'chatapp-44b87';
 const email = 'you@server.com';
 const password = '123123';
-
 
 void configLoading() {
   EasyLoading.instance
@@ -32,12 +31,13 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false
-  ..customAnimation=CustomAnimation();
+    ..customAnimation = CustomAnimation();
 }
-void main() async{
+
+void main() async {
   // await DesktopWindow.setMinWindowSize(Size(500,500));
   WidgetsFlutterBinding.ensureInitialized();
-    Firestore.initialize("pharmacy-940a1"); // Firestore reuses the auth client
+  Firestore.initialize("pharmacy-940a1"); // Firestore reuses the auth client
   await Hive.initFlutter();
   // await DesktopWindow.setMinWindowSize(Size(500,500));
   // Size size = await DesktopWindow.getWindowSize();
@@ -45,9 +45,13 @@ void main() async{
   Hive.registerAdapter(MedicineAdapter());
   Hive.registerAdapter(ItemForSellAdapter());
   Hive.registerAdapter(InvoiceAdapter());
-   Hive.registerAdapter(NotesAdapter());
+  Hive.registerAdapter(NotesAdapter());
+  Hive.registerAdapter(ExpireItemsAdapter());
+  Hive.registerAdapter(ExpireItemSoonAdapter());
   await Hive.openBox<Medicine>('medicine');
-   await Hive.openBox<Notes>('notes');
+  await Hive.openBox<Notes>('notes');
+  await Hive.openBox<ExpireItems>('expire');
+  await Hive.openBox<ExpireItemSoon>('expireSoon');
   await Hive.openBox<ItemForSell>('itemForSell');
   await Hive.openBox<ItemForSell>('inv1');
   await Hive.openBox<ItemForSell>('inv2');
@@ -73,7 +77,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       builder: EasyLoading.init(),
-      title: 'Flutter Demo',debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -82,16 +87,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class CustomAnimation extends EasyLoadingAnimation {
   CustomAnimation();
 
   @override
   Widget buildWidget(
-      Widget child,
-      AnimationController controller,
-      AlignmentGeometry alignment,
-      ) {
+    Widget child,
+    AnimationController controller,
+    AlignmentGeometry alignment,
+  ) {
     return Opacity(
       opacity: controller.value,
       child: RotationTransition(
