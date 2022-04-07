@@ -3,7 +3,6 @@ import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmacy_app/boxes.dart';
 import 'package:pharmacy_app/db/expireItems.dart';
-import 'package:pharmacy_app/db/expiresoon.dart';
 import 'package:pharmacy_app/pages/expires_page.dart';
 import 'package:pharmacy_app/pages/myNotes.dart';
 import '../constant.dart';
@@ -76,7 +75,7 @@ count=filtered.length;
                 width: width * 0.17,
                 height: width * 0.17,
                 posRight: width * 0.1,
-                posTop: width * 0.14,
+                posTop: width *0.1,
                 title: "أضافة \n دواء جديد",
                 callbackAction: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -88,7 +87,7 @@ count=filtered.length;
                 width: width * 0.17,
                 height: width * 0.17,
                 posRight: width * 0.30,
-                posTop: width * 0.14,
+                posTop: width *0.1,
                 title: "فاتورة\n جديدة",
                 callbackAction: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -100,7 +99,7 @@ count=filtered.length;
                 width: width * 0.17,
                 height: width * 0.17,
                 posRight: width * 0.5,
-                posTop: width * 0.14,
+                posTop: width *0.1,
                 title: "ملاحظاتي",
                 callbackAction: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -112,7 +111,7 @@ count=filtered.length;
                 width: width * 0.17,
                 height: width * 0.17,
                 posRight: width * 0.49,
-                posTop: width * 0.345,
+                posTop: width * 0.3,
                 title: "انتهاء\n الصلاحية",
                 callbackAction: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -126,13 +125,13 @@ count=filtered.length;
                   badgeContent: Text('${count}'),
                 ),
                 right: width * 0.5,
-                top: width * 0.35,
+                top: width * 0.33,
               ),
               MyButton(
                   width: width * 0.17,
                   height: width * 0.17,
                   posRight: width * 0.1,
-                  posTop: width * 0.35,
+                  posTop: width * 0.3,
                   title: "قائمة\n المواد",
                   callbackAction: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => ItemsList()))),
@@ -140,7 +139,7 @@ count=filtered.length;
                 width: width * 0.17,
                 height: width * 0.17,
                 posRight: width * 0.30,
-                posTop: width * 0.35,
+                posTop: width * 0.3,
                 title: "سجل\n الفواتير",
                 callbackAction: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => InvoicesHistory())),

@@ -80,19 +80,7 @@ class _ExpireSoonState extends State<ExpireSoon> {
                       color: const Color(0xff79C9BC),
                     )),
               ),
-              MyTextField(
-                onChange: (x) {},
-                fontSize: width * 0.012,
-                width: width * 0.5,
-                height: height * 0.8,
-                textEditingController: textEditingController,
-                myFocusNode: myFocusNode,
-                callbackAction: () {},
-                maxline: 1,
-                posTop: height * 0.05,
-                posRight: 50,
-                title: "",
-              ),
+             data.length!=0?
               Positioned(
                 child: Container(
                   width: width * 0.7,
@@ -198,7 +186,13 @@ class _ExpireSoonState extends State<ExpireSoon> {
                 ),
                 top: height * 0.15,
                 right: 50,
-              )
+              ):Center(child: Text("رائع لاتوجد مواد منتهية الصلاحية ", style: TextStyle(
+          fontFamily: 'Tajawal',
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: fontColor,
+        ),),)
+           
             ],
           ),
         ));

@@ -224,7 +224,7 @@ class _InvoiceHistoryState extends State<InvoiceHistory> {
                   });
                 },
               ),
-              MyTextField(
+              MyTextField(onSubmitted: (x){},
                   fontSize: height * 0.02,
                   onChange: (x) {
                     final box = Boxes.getItemForSell("itemForSell");

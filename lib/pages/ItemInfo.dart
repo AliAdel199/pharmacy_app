@@ -3,6 +3,7 @@ import 'package:desktop_window/desktop_window.dart';
 import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 import '../db/medicine.dart';
 import '../widget/button_widget.dart';
 import '../widget/text_field_widget.dart';
@@ -101,19 +102,44 @@ class _ItemInfoState extends State<ItemInfo> {
                   ),
                 ),
               ),
-              Positioned(
-                top: height * 0.06,
-                right: height * 0.12,
-                child: Text("  الباركود",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.02,
+                 Positioned(
+                   top: height * 0.54,
+                   right: width * 0.43,
+                  child: GestureDetector(onTap: ()=>_selectDate(context),
+                    child: Container(child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                     
+                      Icon(Icons.date_range_outlined,size: height*0.04,),
+                      Text(expireDate==""? "  تاريخ الانتهاء":expireDate,
+                      style: TextStyle(
+                        fontFamily: 'Tajawal',
+                        fontSize: height * 0.03,
+                        fontWeight: FontWeight.w700,
+                        color: fontColor,
+                      )),],),
+                      width: width * 0.3,
+                      height: height * 0.06,
+                      decoration:   BoxDecoration(
+                          borderRadius: BorderRadius.circular(width * 0.05),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: fontColor,
+                              offset: Offset(1, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                    ),
+                  )
+                  //        RaisedButton(
+                  //   onPressed: () => _selectDate(context),
+                  //   child: Text('Select date'),
+                  // ),
+                  ),
+      
+              MyTextField(onSubmitted: (x){},
+                fontSize:20,
                 onChange: (x) {
                   final box = Boxes.getMedicine();
                   if (box.containsKey(_barcode.text.trim())) {
@@ -131,122 +157,71 @@ class _ItemInfoState extends State<ItemInfo> {
                 width: width * 0.3,
                 maxline: 1,
                 height: height,
-                posRight: height * 0.1,
+                posRight: width * 0.05,
                 posTop: height * 0.1,
                 title: "الباركود",
                 textEditingController: _barcode,myFocusNode: _barcodemyFocusNode,
               ),
-              Positioned(
-                top: height * 0.06,
-                right: height * 0.66,
-                child: Text("  ملاحظات شخصية",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.025,
+              MyTextField(onSubmitted: (x){},
+                fontSize: 20,
                 onChange: (x) {},
                 callbackAction: () {},
                 width: width * 0.3,
                 maxline: 16,
                 height: height * 6,
-                posRight: height * 0.63,
+                   posRight: width * 0.43,
                 posTop: height * 0.1,
                 title: "ملاحظات شخصية",
                 textEditingController: _docNote,myFocusNode: _docNoteFocusNode,
               ),
-              Positioned(
-                top: height * 0.21,
-                right: height * 0.12,
-                child: Text("  اسم المنتج",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.02,
+            
+              MyTextField(onSubmitted: (x){},
+                fontSize:20,
                 onChange: (x) {},
                 callbackAction: () {},
                 width: width * 0.3,
                 maxline: 1,
                 height: height,
-                posRight: height * 0.1,
+           posRight: width * 0.05,
                 posTop: height * 0.25,
                 title: "اسم المنتج",
                 textEditingController: _itemName,myFocusNode: _itemNameFocusNode,
               ),
-              Positioned(
-                top: height * 0.35,
-                right: height * 0.12,
-                child: Text("  سعر المفرد",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.02,
+      
+              MyTextField(onSubmitted: (x){},
+                fontSize: 20,
                 onChange: (x) {},
                 callbackAction: () {},
                 width: width * 0.14,
                 maxline: 1,
                 height: height,
-                posRight: height * 0.1,
+           posRight: width * 0.05,
                 posTop: height * 0.4,
                 title: "سعر المفرد",
                 textEditingController: _itemPrice,myFocusNode: _itemPriceFocusNode,
               ),
-              Positioned(
-                top: height * 0.35,
-                right: height * 0.37,
-                child: Text("  سعر الصندوق",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.02,
+        
+              MyTextField(onSubmitted: (x){},
+                fontSize: 20,
                 onChange: (x) {},
                 callbackAction: () {},
                 width: width * 0.14,
                 maxline: 1,
                 height: height,
-                posRight: height * 0.35,
+              posRight: width * 0.21,
                 posTop: height * 0.4,
                 title: "سعر الصندوق",
                 textEditingController: _boxPrice,myFocusNode: _boxPriceFocusNode,
               ),
-              Positioned(
-                top: height * 0.51,
-                right: height * 0.12,
-                child: Text("  ملاحظات للمريض",
-                    style: TextStyle(
-                      fontFamily: 'Tajawal',
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w700,
-                      color: fontColor,
-                    )),
-              ),
-              MyTextField(
-                fontSize: height * 0.025,
+          
+              MyTextField(onSubmitted: (x){},
+                fontSize: 20,
                 onChange: (x) {},
                 callbackAction: () {},
                 width: width * 0.3,
                 maxline: 14,
                 height: height * 6,
-                posRight: height * 0.1,
+           posRight: width * 0.05,
                 posTop: height * 0.55,
                 title: "ملاحظات للمريض",
                 textEditingController: _sicNote,myFocusNode: _sicNoteFocusNode,
@@ -254,7 +229,7 @@ class _ItemInfoState extends State<ItemInfo> {
               MyButton(
                   width: height * 0.2,
                   height: height * 0.2,
-                  posRight: height * 0.65,
+                   posRight: width * 0.59,
                   posTop: height * 0.63,
                   title: "اضافة",
                   callbackAction: () => addItem(
@@ -267,7 +242,7 @@ class _ItemInfoState extends State<ItemInfo> {
               MyButton(
                   width: height * 0.2,
                   height: height * 0.2,
-                  posRight: height * 0.87,
+                  posRight: width * 0.47,
                   posTop: height * 0.63,
                   title: "حذف",
                   callbackAction: () async {
@@ -327,5 +302,22 @@ class _ItemInfoState extends State<ItemInfo> {
             ],
           ),
         ));
+  }
+    String expireDate="";
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        expireDate=DateFormat('yyyy-MM-dd').format(selectedDate);
+        print(selectedDate.difference(DateTime.now()).inDays);
+      });
+    }
   }
 }

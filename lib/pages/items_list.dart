@@ -23,6 +23,8 @@ class _ItemsListState extends State<ItemsList> {
 
   var data = Boxes.getMedicine();
   var fireData = Firestore.instance.collection("Medicine");
+  
+  List<Medicine> filtered = [];
 
   void getDataFromFireStore() async {
  
@@ -126,8 +128,14 @@ class _ItemsListState extends State<ItemsList> {
                     color: buttonColor,
                   )),
             ),
-            MyTextField(
-              onChange: (x) {},
+            MyTextField(onSubmitted: (x){},
+              onChange: (x) {
+                var filteredUsers = data.values.where((user) =>
+                  user.medName!.contains(x));
+            setState(() {
+                filtered = filteredUsers.toList();
+            });
+              },
               fontSize: width * 0.012,
               width: width * 0.5,
               height: height * 0.8,
@@ -135,7 +143,7 @@ class _ItemsListState extends State<ItemsList> {
               myFocusNode: textEditingFocusNode,
               callbackAction: () {},
               maxline: 1,
-              posTop: height * 0.05,
+              posTop: height * 0.03,
               posRight: 50,
               title: "",
             ),
@@ -147,15 +155,16 @@ class _ItemsListState extends State<ItemsList> {
                       valueListenable: data.listenable(),
                       builder: (context, box, widget) {
                         return GridView.builder(
-                          itemCount: data.length,
+                          itemCount:textEditingController.text==""?
+                           data.length:filtered.length,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1.5,
                                   crossAxisCount:
                                       (orientation == Orientation.portrait)
                                           ? 3
                                           : 4),
                           itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
+                            return textEditingController.text==""? GestureDetector(
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ItemInfo(
@@ -172,39 +181,21 @@ class _ItemsListState extends State<ItemsList> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            data
-                                                .getAt(index)!
-                                                .medName
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontFamily: 'Tajawal',
-                                              fontSize: width * 0.0122,
-                                              fontWeight: FontWeight.w700,
-                                              color: fontColor,
-                                            ),
-                                          ),
-                                          Text(
-                                            " اسم المادة : ",
-                                            style: TextStyle(
-                                              fontFamily: 'Tajawal',
-                                              fontSize: width * 0.012,
-                                              fontWeight: FontWeight.w700,
-                                              color: fontColor,
-                                            ),
-                                            textDirection: TextDirection.rtl,
-                                          )
-                                        ],
+                                      child: Text(
+                                        data
+                                            .getAt(index)!
+                                            .medName
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.0122,
+                                          fontWeight: FontWeight.w700,
+                                          color: fontColor,
+                                        ),
                                       ),
                                     ),
                                     Divider(
-                                      thickness: 3,
-                                      endIndent: 20,
-                                      indent: 20,
+                                   
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10),
@@ -238,9 +229,7 @@ class _ItemsListState extends State<ItemsList> {
                                       ),
                                     ),
                                     Divider(
-                                      thickness: 3,
-                                      endIndent: 20,
-                                      indent: 20,
+                                     
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10),
@@ -253,6 +242,99 @@ class _ItemsListState extends State<ItemsList> {
                                                 .getAt(index)!
                                                 .boxPrice
                                                 .toString(),
+                                            style: TextStyle(
+                                              fontFamily: 'Tajawal',
+                                              fontSize: width * 0.012,
+                                              fontWeight: FontWeight.w700,
+                                              color: fontColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            "سعر الشراء : ",
+                                            style: TextStyle(
+                                              fontFamily: 'Tajawal',
+                                              fontSize: width * 0.012,
+                                              fontWeight: FontWeight.w700,
+                                              color: fontColor,
+                                            ),
+                                            textDirection: TextDirection.rtl,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                elevation: 5,
+                              ),
+                            ):GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ItemInfo(
+                                      barcode:
+                                          data.getAt(index)!.key.toString()),
+                                ),
+                              ),
+                              child: Card(
+                                color: backgroundColor,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: Text(
+                                       filtered[index].medName.toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.0122,
+                                          fontWeight: FontWeight.w700,
+                                          color: fontColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(
+                                   
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                           filtered[index].selPrice.toString(),
+                                            style: TextStyle(
+                                              fontFamily: 'Tajawal',
+                                              fontSize: width * 0.012,
+                                              fontWeight: FontWeight.w700,
+                                              color: fontColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            "سعر البيع : ",
+                                            style: TextStyle(
+                                              fontFamily: 'Tajawal',
+                                              fontSize: width * 0.012,
+                                              fontWeight: FontWeight.w700,
+                                              color: fontColor,
+                                            ),
+                                            textDirection: TextDirection.rtl,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                     
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                           filtered[index].boxPrice.toString(),
                                             style: TextStyle(
                                               fontFamily: 'Tajawal',
                                               fontSize: width * 0.012,

@@ -50,7 +50,7 @@ class InvoiceTextField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(width * 0.01))),
         style: TextStyle(
           fontFamily: 'Tajawal',
-          fontSize: height * 0.12,
+          fontSize: 20,
           fontWeight: FontWeight.w700,
           color: fontColor,
         ),

@@ -37,13 +37,12 @@ class CustomTextField extends StatelessWidget {
 
           controller: textEditingController,
           maxLines: maxline,
-          // style: GoogleFonts.tajawal(
-          //   textStyle: Theme.of(context).textTheme.headline4,
-          //   fontSize: height * 0.023,
-          //   fontWeight: FontWeight.w900,
-          //   fontStyle: FontStyle.italic,
-          //   color: fontColor,
-          // ),
+     style: TextStyle(
+                                fontFamily: 'Tajawal',
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.italic,
+                                color: fontColor,
+                                fontSize: 18,),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white70,

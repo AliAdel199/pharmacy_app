@@ -178,23 +178,10 @@ class _NewInvoiceState extends State<NewInvoice> {
                           color: buttonColor,
                         )),
                   ),
+              
                   Positioned(
-                    top: height * 0.06,
-                    right: height * 0.09,
-                    child: Text(
-                      "  بحث",
-                      // style: GoogleFonts.tajawal(
-                      //   textStyle: Theme.of(context).textTheme.headline4,
-                      //   fontSize: height * 0.03,
-                      //   fontWeight: FontWeight.w700,
-                      //   fontStyle: FontStyle.italic,
-                      //   color: fontColor,
-                      // ),
-                    ),
-                  ),
-                  Positioned(
-                    top: height * 0.3,
-                    right: height * 0.98,
+                    top: height * 0.25,
+                    right: width * 0.6,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(width * 0.01),
@@ -208,35 +195,35 @@ class _NewInvoiceState extends State<NewInvoice> {
                         ],
                       ),
                       width: width * 0.15,
-                      height: width * 0.12,
+                      height: height * 0.2,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Center(
                             child: Text(
                               "الاجمالي",
-                              // style: GoogleFonts.tajawal(
-                              //   textStyle:
-                              //       Theme.of(context).textTheme.headline4,
-                              //   fontSize: height * 0.03,
-                              //   fontWeight: FontWeight.w700,
-                              //   fontStyle: FontStyle.italic,
-                              //   color: Colors.white,
-                              // ),
+                              style: TextStyle(
+                              fontFamily: 'Tajawal',
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: fontColor,
+                              fontSize: 20,
+                            
+                    ),
                             ),
                           ),
                           Divider(),
                           Center(
                             child: Text(
                               " د.ع  $invoiceTotal",
-                              // style: GoogleFonts.tajawal(
-                              //   textStyle:
-                              //       Theme.of(context).textTheme.headline4,
-                              //   fontSize: height * 0.03,
-                              //   fontWeight: FontWeight.w700,
-                              //   fontStyle: FontStyle.italic,
-                              //   color: Colors.white,
-                              // ),
+                             style: TextStyle(
+                              fontFamily: 'Tajawal',
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: fontColor,
+                              fontSize: 20,
+                            
+                    ),
                             ),
                           ),
                         ],
@@ -244,8 +231,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                     ),
                   ),
                   MyButton(
-                    posTop: height * 0.55,
-                    posRight: height * 0.9,
+                    posTop: height * 0.5,
+                    posRight: width * 0.7,
                     width: width * 0.12,
                     height: width * 0.12,
                     title: "طباعة الفاتورة",
@@ -485,8 +472,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                     },
                   ),
                   MyButton(
-                    posTop: height * 0.55,
-                    posRight: height * 1.1,
+                    posTop: height * 0.5,
+                    posRight: width * .57,
                     width: width * 0.12,
                     height: width * 0.12,
                     title: "فاتورة جديدة",
@@ -497,19 +484,19 @@ class _NewInvoiceState extends State<NewInvoice> {
                       });
                     },
                   ),
-                  MyTextField(
+                  MyTextField(onSubmitted: (x){ updateItemsList(initPosition);},
                       fontSize: height * 0.02,
                       onChange: (x) {
-                        updateItemsList(initPosition);
+                       
                       },
                       callbackAction: () {},
                       width: width * 0.51,
                       height: height * 0.9,
-                      posRight: height * 0.07,
-                      posTop: height * 0.1,
+                      posRight: width * 0.03,
+                      posTop: height * 0.04,
                       textEditingController: searchControler,
                       myFocusNode: searchFocusNode,
-                      title: "title",
+                      title: "بحث",
                       maxline: 1),
                   Positioned(
                     top: height * 0.2,
@@ -588,7 +575,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                                       ),
                                     ],
                                   ),
-                                  height: height * 0.59,
+                                  height: height * 0.35,
                                   // color: Color(0xff97D4CA),
                                   child: ListView(
                                     children: [
@@ -619,7 +606,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                                             child: CustomTextField(
                                               readOnly: true,
                                               width: width * 0.1,
-                                              height: height,
+                                              height:  height*0.8,
                                               onChange: (x) {},
                                               textEditingController:
                                                   _totalPriceControllers[index],
@@ -632,7 +619,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                                             child: CustomTextField(
                                               readOnly: false,
                                               width: width * 0.1,
-                                              height: height,
+                                              height: height*0.8,
                                               onChange: (x) {
                                                 box.getAt(index)!.selPrice =
                                                     int.parse(x.trim());
@@ -657,7 +644,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                                               child: CustomTextField(
                                                 readOnly: false,
                                                 width: width * 0.055,
-                                                height: height,
+                                                height:  height*0.8,
                                                 onChange: (x) {
                                                   int a = box
                                                           .getAt(index)!
@@ -682,7 +669,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                                             child: CustomTextField(
                                               readOnly: true,
                                               width: width * 0.15,
-                                              height: height,
+                                              height: height*0.8,
                                               onChange: (x) {},
                                               textEditingController:
                                                   _itemNameControllers[index],
@@ -692,49 +679,25 @@ class _NewInvoiceState extends State<NewInvoice> {
                                         ],
                                       ),
                                       const Divider(),
-                                      Text(
-                                        "       ملاحظات للمريض",
-                                        textDirection: TextDirection.rtl,
-                                        style: TextStyle(
-                                          fontFamily: 'Tajawal',
-                                          fontSize: height * 0.02,
-                                          fontWeight: FontWeight.w700,
-                                          fontStyle: FontStyle.italic,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                      Padding(
+                                      Row(mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                            Column(
+                                        children: [
+                                          Text(
+                                            "       ملاحظات شخصية",
+                                            textDirection: TextDirection.rtl,
+                                            style: TextStyle(
+                                              fontFamily: 'Tajawal',
+                                              fontSize: height * 0.02,
+                                              fontWeight: FontWeight.w700,
+                                              fontStyle: FontStyle.italic,
+                                              color: fontColor,
+                                            ),
+                                          ),
+                                          Padding(
                                         padding: EdgeInsets.all(height * 0.01),
                                         child: InvoiceTextField(
-                                          width: width,
-                                          height: height * 0.20,
-                                          maxLine: 6,
-                                          textEditingController:
-                                              _noteControllers[index],
-                                          callbackAction: () {},
-                                          onChange: (v) {
-                                            box = Boxes.getItemForSell(
-                                                'inv${initPosition}');
-                                            box.getAt(index)!.sicNote = v;
-                                            // print("MMMMMM ${ box.getAt(index)!.sicNote}");
-                                          },
-                                        ),
-                                      ),
-                                      Text(
-                                        "       ملاحظات شخصية",
-                                        textDirection: TextDirection.rtl,
-                                        style: TextStyle(
-                                          fontFamily: 'Tajawal',
-                                          fontSize: height * 0.02,
-                                          fontWeight: FontWeight.w700,
-                                          fontStyle: FontStyle.italic,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(height * 0.01),
-                                        child: InvoiceTextField(
-                                          width: width,
+                                          width: width*0.233,
                                           height: height * 0.20,
                                           maxLine: 6,
                                           textEditingController:
@@ -743,6 +706,47 @@ class _NewInvoiceState extends State<NewInvoice> {
                                           onChange: (v) {},
                                         ),
                                       )
+                                        ],
+                                      ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                "       ملاحظات للمريض",
+                                                textDirection: TextDirection.rtl,
+                                                style: TextStyle(
+                                                  fontFamily: 'Tajawal',
+                                                  fontSize: height * 0.02,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: fontColor,
+                                                ),
+                                              ),
+                                               Padding(
+                                        padding: EdgeInsets.all(height * 0.01),
+                                        child: InvoiceTextField(
+                                          width: width*0.233,
+                                          height: height * 0.20,
+                                          maxLine: 6,
+                                          textEditingController:
+                                              _noteControllers[index],
+                                          callbackAction: () {},
+                                          onChange: (v) {
+                                            // box = Boxes.getItemForSell(
+                                            //     'inv${initPosition}');
+                                            box.getAt(index)!.sicNote = v;
+                                            // print("MMMMMM ${ box.getAt(index)!.sicNote}");
+                                          },
+                                        ),
+                                      ),
+
+                                            ],
+                                          ),
+                                         
+                                        ],
+                                      ),
+                                     
+                                     
+                                      
                                     ],
                                   ),
                                 ),

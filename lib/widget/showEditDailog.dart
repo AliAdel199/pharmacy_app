@@ -138,40 +138,42 @@ class _ShowEditDailogNoteState extends State<ShowEditDailogNote> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 60,
-              width: widget.width * 0.35,
-              child: DropdownButton<String>(
-                value: dropdownValue,
-                icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                borderRadius: BorderRadius.circular(25),
-                style: TextStyle(
-                  fontFamily: 'Tajawal',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic,
-                  color: fontColor,
-                ),
-                underline: Container(
-                  height: 1,
-                  color: Colors.deepPurpleAccent,
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    print("newValue $newValue");
-                    dropdownValue = newValue!;
-                  });
-                },
-                items: <String>['Weak', 'Strong', 'Semi-Strong']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
+
+            // SizedBox(
+            //   height: 60,
+            //   width: widget.width * 0.35,
+            //   child: DropdownButton<String>(
+            //     value: dropdownValue,
+            //     icon: const Icon(Icons.arrow_downward),
+            //     elevation: 16,
+            //     borderRadius: BorderRadius.circular(25),
+            //     style: TextStyle(
+            //       fontFamily: 'Tajawal',
+            //       fontSize: 20,
+            //       fontWeight: FontWeight.w700,
+            //       fontStyle: FontStyle.italic,
+            //       color: fontColor,
+            //     ),
+            //     underline: Container(
+            //       height: 1,
+            //       color: Colors.deepPurpleAccent,
+            //     ),
+            //     onChanged: (String? newValue) {
+            //       setState(() {
+            //         print("newValue $newValue");
+            //         dropdownValue = newValue!;
+            //       });
+            //     },
+            //     items: <String>['Weak', 'Strong', 'Semi-Strong']
+            //         .map<DropdownMenuItem<String>>((String value) {
+            //       return DropdownMenuItem<String>(
+            //         value: value,
+            //         child: Text(value),
+            //       );
+            //     }).toList(),
+            //   ),
+            // ),
+         
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(widget.width * 0.02),

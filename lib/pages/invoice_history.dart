@@ -9,6 +9,7 @@ import 'package:firedart/generated/google/protobuf/wrappers.pbjson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pharmacy_app/db/invoice.dart';
 import '../boxes.dart';
 import '../widget/text_field_widget.dart';
 
@@ -29,6 +30,8 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
 
   var data = Boxes.getInvoice();
     var fireData = Firestore.instance.collection("Invoices");
+
+      List<Invoice> filtered = [];
 
     void uploadeInvoce()async{
 
@@ -129,8 +132,14 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                       color: const Color(0xff79C9BC),
                     )),
               ),
-              MyTextField(
-                onChange: (x) {},
+              MyTextField(onSubmitted: (x){},
+                onChange: (x) {
+                         var filteredUsers = data.values.where((user) =>
+                  user.invID!.toString().contains(x));
+            setState(() {
+                filtered = filteredUsers.toList();
+            });
+                },
                 fontSize: width * 0.012,
                 width: width * 0.5,
                 height: height * 0.8,
@@ -152,12 +161,14 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                       valueListenable: data.listenable(),
                       builder: (context, box, widget) {
                         return GridView.builder(
-                      itemCount: data.length,
+                      itemCount:textEditingController!.text==""? data.length:filtered.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount:
                               (orientation == Orientation.portrait) ? 3 : 4),
                       itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
+                        return textEditingController!.text==""? 
+                     
+                        GestureDetector(
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => InvoiceHistory(
@@ -263,7 +274,112 @@ class _InvoicesHistoryState extends State<InvoicesHistory> {
                             ),
                             elevation: 5,
                           ),
+                        ): GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => InvoiceHistory(
+                                invoiceNumber:
+                                    data.getAt(index)!.invID!.toInt(),
+                              ),
+                            ),
+                          ),
+                          child: Card(
+                            color: backgroundColor,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                      filtered[index].invID.toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.0122,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Text(
+                                        " رقم الفاتورة : ",
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.012,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                        textDirection: TextDirection.rtl,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Divider(thickness: 3,endIndent: 20,indent: 20,),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        filtered[index].invTotal.toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.012,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Text(
+                                        "المبلغ الكلي : ",
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.012,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                        textDirection: TextDirection.rtl,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const Divider(thickness: 3,endIndent: 20,indent: 20,),                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "التأريخ : ",
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.012,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                        textDirection: TextDirection.rtl,
+                                      ),
+                                      Text(
+                                        filtered[index].invDate!
+                                            .toLocal()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tajawal',
+                                          fontSize: width * 0.012,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            elevation: 5,
+                          ),
                         );
+                     
                       },
                     );
                       })
